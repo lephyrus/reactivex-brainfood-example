@@ -11,24 +11,21 @@ const keywords = {
 let counter = 0;
 let muted = null;
 
-function process(sourceTweet) {
-  let tweet = {
-    source: sourceTweet,
-    handle: sourceTweet.user.screen_name,
-    message: sourceTweet.text
-  };
-
+function process(tweet) {
   counter += 1;
 
-  tweet.count = counter;
-  tweet.keywords = utils.getTweetKeywords(tweet, Object.keys(keywords));
-
-  return tweet;
+  return {
+    source: tweet,
+    handle: tweet.user.screen_name,
+    message: tweet.text,
+    keywords: utils.getTweetKeywords(tweet.text, Object.keys(keywords)),
+    count: counter
+  };
 }
 
 function onTweet(tweet) {
+  tweet = process(tweet);
   if (!muted) {
-    tweet = process(tweet);
     console.log(utils.stringifyTweet(tweet, keywords));
     muted = setTimeout(() => {
       muted = null;

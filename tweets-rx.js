@@ -10,50 +10,18 @@ const keywords = {
 };
 
 const tweet$ = new Rx.Subject();
+const wrappedTweet$ = tweet$.map(tweet => ({
+  source: tweet,
+  handle: tweet.user.screen_name,
+  message: tweet.text,
+  keywords: utils.getTweetKeywords(tweet.text, Object.keys(keywords))
+}));
+const count$ = tweet$.scan(count => count + 1, 0);
 
-function onTweet(tweet) {
-  tweet$.next(tweet);
-}
+track(Object.keys(keywords).join(','), (tweet) => tweet$.next(tweet), (error) => console.error(error));
 
-function wrap() {
-  return (tweet$) => tweet$
-    .map(tweet => ({
-      source: tweet,
-      handle: tweet.user.screen_name,
-      message: tweet.text
-    }));
-}
-
-function getKeywords(keywords) {
-  return (tweet$) => tweet$
-    .map(tweet => utils.getTweetKeywords(tweet, keywords));
-}
-
-function annotateKeywords(keywords) {
-  return ($tweet) => Rx.Observable.zip(
-    $tweet,
-    $tweet.let(getKeywords(keywords)),
-    (tweet, keywords) => Object.assign({}, tweet, {
-      keywords: keywords
-    })
-  );
-}
-
-function getCount() {
-}
-
-function annotateCount() {
-}
-
-function throttle() {
-}
-
-track(Object.keys(keywords).join(','), onTweet, (error) => console.error(error));
-
-tweet$
-  .let(wrap())
-  .let(annotateKeywords(Object.keys(keywords)))
-  .map(tweet => tweet.keywords)
-  .subscribe(keywords => {
-    console.log(keywords);
-  });
+Rx.Observable.zip(
+  wrappedTweet$, count$,
+  (tweet, count) => Object.assign({}, tweet, { count: count }))
+  .throttleTime(1000)
+  .subscribe(tweet => console.log(utils.stringifyTweet(tweet, keywords)));

@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const colors = require('colors');
 
-function getTweetKeywords(tweet, keywords) {
-  return keywords.filter(keyword => _.includes(tweet.message.toLowerCase(), keyword));
+function getTweetKeywords(message, keywords) {
+  return keywords.filter(keyword => _.includes(message.toLowerCase(), keyword));
 }
 
 function stringifyTweet(tweet, keywords) {
