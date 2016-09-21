@@ -1,6 +1,12 @@
 # reactivex-brainfood-example
 Contrasting a conventional implementation with one using RxJS
 
+Running the non-Rx version:
+`node tweets.js`
+
+Running the Rx version:
+`node tweets-rx.js`
+
 ## Twitter API Authentication
 The following needs to be set in your environment for the scripts to work:
  - TWITTER_CONSUMER_KEY
