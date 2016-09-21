@@ -1,0 +1,13 @@
+{
+  "name": " reactivex-brainfood-example",
+  "version": "0.0.0",
+  "description": "Contrasting a conventional implementation with one using RxJS",
+  "scripts": {},
+  "dependencies": {
+    "@reactivex/rxjs": "^5.0.0-beta.12",
+    "colors": "1.x",
+    "lodash": "4.x",
+    "twitter": "1.x"
+  },
+  "main": "./tweets"
+}
